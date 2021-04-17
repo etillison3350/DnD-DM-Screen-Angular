@@ -1,4 +1,4 @@
-# DndDmScreen
+# D&D DM Screen
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.1.4.
 
