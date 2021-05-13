@@ -1,0 +1,12 @@
+<ng-template #condDescription>
+    <h1 class="dm-statblock-name">{{condition | titlecase}}</h1>
+    <ul class="dm-statblock-condition-description">
+        <ng-container *ngFor="let pgph of conditionDescriptions[condition]">
+            <li *ngIf="!Array.isArray(pgph)">{{pgph}}</li>
+            <ul *ngIf="Array.isArray(pgph)" class="dm-statblock-condition">
+                <div *ngFor="let subitem of pgph" style="white-space: pre;">{{subitem}}</div>
+            </ul>
+        </ng-container>
+    </ul>
+</ng-template>
+<span class="dm-statblock-condition" [ngbPopover]="condDescription" triggers="mouseenter:mouseleave" container="body" [openDelay]="500" [closeDelay]="500">{{condition}}</span>

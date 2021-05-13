@@ -1,1 +1,162 @@
-<p>stat-block works!</p>
+<div #statblock class="dm-statblock" [class.dm-statblock-small]="small" *ngIf="data">
+    <h1 class="dm-statblock-name">{{data.name}}</h1>
+    <ng-container *ngIf="isCreature(data)">
+        <div *ngIf="data.swarmSize" class="dm-statblock-subtitle">{{data.swarmSize | titlecase}} swarm of {{data.size | titlecase}} {{data.creatureType | lowercase}}s, {{data.alignment | alignment}}</div>
+        <div *ngIf="!data.swarmSize" class="dm-statblock-subtitle">
+            <ng-container>{{data.size | titlecase}} {{data.creatureType | lowercase}}</ng-container>
+            <ng-container *ngIf="data.subtype"> ({{data.subtype}})</ng-container>
+            <ng-container>, {{data.alignment | alignment}}</ng-container>
+        </div>
+        <div class="dm-statblock-section">
+            <div class="dm-statblock-section-creature"></div>
+            <div class="dm-statblock-section-creature">
+                <div class="dm-statblock-attribute">
+                    <span class="dm-statblock-attr-name">Armor Class</span>
+                    <span class="dm-statblock-attr-value">{{data.ac}}</span>
+                    <span *ngIf="data.armorNote" class="dm-statblock-attr-value"> ({{data.armorNote}})</span>
+                </div>
+                <div class="dm-statblock-attribute">
+                    <span class="dm-statblock-attr-name">Hit Points</span>
+                    <span class="dm-statblock-attr-value">
+                        <dmscreen-dice-roll [diceRoll]="data.hitDice"></dmscreen-dice-roll>
+                        <!-- {{data.hitDice | diceRoll}} -->
+                    </span>
+                </div>
+                <div class="dm-statblock-attribute">
+                    <span class="dm-statblock-attr-name">Speed</span>
+                    <span class="dm-statblock-attr-value">{{data.speed | speed}}</span>
+                </div>
+            </div>
+            <div class="dm-statblock-section-creature">
+                <table class="dm-ability-table">
+                    <thead>
+                        <tr>
+                            <th>STR</th>
+                            <th>DEX</th>
+                            <th>CON</th>
+                            <th>INT</th>
+                            <th>WIS</th>
+                            <th>CHA</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td *ngFor="let ability of data.abilityScores | abilities:true">
+                                <dmscreen-dice-roll [diceRoll]="ability.diceRoll" [text]="ability.score + ' (' + (ability.modifier | modifier) + ')'"></dmscreen-dice-roll>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="dm-statblock-section-creature">
+                <div class="dm-statblock-attribute" *ngIf="hasEntries(data.savingThrows)">
+                    <span class="dm-statblock-attr-name">Saving Throws</span>
+                    <span class="dm-statblock-attr-value" *ngFor="let save of data.savingThrows | abilities; index as i">
+                        <ng-container *ngIf="i > 0">, </ng-container>
+                        <dmscreen-dice-roll [diceRoll]="save.diceRoll" [text]="(save.ability | slice:0:3 | titlecase) + ' ' + (save.modifier | modifier)"></dmscreen-dice-roll>
+                    </span>
+                </div>
+                <div class="dm-statblock-attribute" *ngIf="hasEntries(data.skills)">
+                    <span class="dm-statblock-attr-name">Skills</span>
+                    <span class="dm-statblock-attr-value" *ngFor="let skill of data.skills | skills; index as i">
+                        <ng-container *ngIf="i > 0">, </ng-container>
+                        <dmscreen-dice-roll [diceRoll]="skill.diceRoll" [text]="(skill.skill | engTitleCase) + ' ' + (skill.modifier | modifier)"></dmscreen-dice-roll>
+                    </span>
+                </div>
+                <div class="dm-statblock-attribute" *ngIf="hasEntries(data.vulnerabilities)">
+                    <span class="dm-statblock-attr-name">Damage Vulnerabilities</span>
+                    <span class="dm-statblock-attr-value">{{data.vulnerabilities | damages}}</span>
+                </div>
+                <div class="dm-statblock-attribute" *ngIf="hasEntries(data.resistances)">
+                    <span class="dm-statblock-attr-name">Damage Resistances</span>
+                    <span class="dm-statblock-attr-value">{{data.resistances | damages}}</span>
+                </div>
+                <div class="dm-statblock-attribute" *ngIf="hasEntries(data.immunities)">
+                    <span class="dm-statblock-attr-name">Damage Immunities</span>
+                    <span class="dm-statblock-attr-value">{{data.immunities | damages}}</span>
+                </div>
+                <div class="dm-statblock-attribute" *ngIf="data.conditionImmunities.length">
+                    <span class="dm-statblock-attr-name">Condition Immunities</span>
+                    <span class="dm-statblock-attr-value" *ngFor="let cond of data.conditionImmunities; index as i">
+                        <dmscreen-condition [condition]="cond"></dmscreen-condition>
+                        <ng-container *ngIf="i < data.conditionImmunities.length - 1">, </ng-container>
+                    </span>
+                </div>
+                <div class="dm-statblock-attribute">
+                    <span class="dm-statblock-attr-name">Senses</span>
+                    <span class="dm-statblock-attr-value">
+                        <ng-container>{{data.senses | senses}}</ng-container>
+                        <ng-container *ngIf="hasEntries(data.senses.types)">, </ng-container>
+                        <ng-container>passive Perception {{(10 + (data.skills['perception'] || (data.abilityScores['wisdom'] - 10) / 2) - 0.1) | number:'1.0-0'}}</ng-container>
+                    </span>
+                </div>
+                <div class="dm-statblock-attribute">
+                    <span class="dm-statblock-attr-name">Languages</span>
+                    <span class="dm-statblock-attr-value">{{data.languages | join}}</span>
+                    <span class="dm-statblock-attr-value" *ngIf="data.languages.length == 0">&mdash;</span>
+                </div>
+                <div class="dm-statblock-attribute">
+                    <span class="dm-statblock-attr-name">Challenge</span>
+                    <span class="dm-statblock-attr-value">{{data.challengeRating | challengeRating}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="dm-statblock-section-features">
+            <dmscreen-feature *ngFor="let feature of data.features" [feature]="feature"></dmscreen-feature>
+        </div>
+        <div class="dm-statblock-section-actions" *ngIf="data.actions.length > 0">
+            <div class="dm-statblock-section-header">Actions</div>
+            <dmscreen-feature *ngFor="let feature of data.actions" [feature]="feature"></dmscreen-feature>
+        </div>
+        <div class="dm-statblock-section-actions" *ngIf="data.reactions.length > 0">
+            <div class="dm-statblock-section-header">Reactions</div>
+            <dmscreen-feature *ngFor="let feature of data.reactions" [feature]="feature"></dmscreen-feature>
+        </div>
+        <div class="dm-statblock-section-actions" *ngIf="data.legendaryActions.length > 0">
+            <div class="dm-statblock-section-header">
+                <span>Legendary </span>
+                <span>Actions</span>
+            </div>
+            <div class="dm-statblock-legendary-desc">{{data.shortName | sentencecase}} can take 3 legendary actions, choosing from the options below. Only one legendary action option can be used at a time and only at the end of another creature's turn. {{data.shortName | sentencecase}} regains spent legendary actions at the start of its turn.</div>
+            <dmscreen-feature *ngFor="let feature of data.legendaryActions" [feature]="feature"></dmscreen-feature>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="isSpell(data)">
+        <div class="dm-statblock-subtitle" *ngIf="data.level == 0">{{data.spellType | titlecase}} cantrip</div>
+        <div class="dm-statblock-subtitle" *ngIf="data.level != 0">
+            <ng-container>{{data.level | ordinal}}-level {{data.spellType | lowercase}}</ng-container>
+            <ng-container *ngIf="data.ritual"> (ritual)</ng-container>
+        </div>
+        <div class="dm-statblock-section"></div>
+        <div class="dm-statblock-section">
+            <div class="dm-statblock-attribute">
+                <span class="dm-statblock-attr-name">Casting Time: </span>
+                <span class="dm-statblock-attr-value">{{data.castingTime}}</span>
+            </div>
+            <div class="dm-statblock-attribute">
+                <span class="dm-statblock-attr-name">Range: </span>
+                <span class="dm-statblock-attr-value">{{data.range}}</span>
+            </div>
+            <div class="dm-statblock-attribute">
+                <span class="dm-statblock-attr-name">Components: </span>
+                <span *ngIf="data.verbal" class="dm-statblock-attr-value">
+                    <ng-container>V</ng-container>
+                    <ng-container *ngIf="data.somatic || data.materialComponents">, </ng-container>
+                </span>
+                <span *ngIf="data.somatic" class="dm-statblock-attr-value">
+                    <ng-container>S</ng-container>
+                    <ng-container *ngIf="data.materialComponents">, </ng-container>
+                </span>
+                <span *ngIf="data.materialComponents" class="dm-statblock-attr-value">M ({{data.materialComponents}})</span>
+            </div>
+            <div class="dm-statblock-attribute">
+                <span class="dm-statblock-attr-name">Duration: </span>
+                <span *ngIf="data.concentration" class="dm-statblock-attr-value">Concentration, up to </span>
+                <span class="dm-statblock-attr-value">{{data.duration}}</span>
+            </div>
+        </div>
+        <div class="dm-statblock-section-features">
+            <dmscreen-feature *ngFor="let feature of data.description" [feature]="feature"></dmscreen-feature>
+        </div>
+    </ng-container>
+</div>

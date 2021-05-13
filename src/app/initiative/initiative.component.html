@@ -1,1 +1,72 @@
-<p>initiative works!</p>
+<div class="dm-initiative-container">
+    <div #scrollPane class="dm-initiative-scroll" (drop)="handleDrop($event)" (dragover)="handleDrag($event)">
+        <table class="table table-sm table-striped table-hover dm-initiative-table">
+            <colgroup>
+                <col>
+                <col style="width: 48px;">
+                <col style="width: 72px;">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th style="text-align: center;">Roll</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let unit of units | slice:selectedUnit; index as i" class="dm-initiative-row" [class.table-primary]="i == 0" (click)="select(unit); scrollPane.scrollTop = 0">
+                    <td>{{unit.name}}</td>
+                    <td style="text-align: center;">{{unit.initiative}}</td>
+                    <td style="text-align: center;">
+                        <button class="btn btn-sm btn-success dm-initiative-btn" title="Toggle visible to players" (click)="toggleVisibility(unit);$event.stopPropagation()">
+                            <i class="bi" [class.bi-eye-fill]="unit.visible" [class.bi-eye-slash-fill]="!unit.visible"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger dm-initiative-btn" title="Remove" (click)="remove(unit);$event.stopPropagation()">
+                            <i class="bi bi-trash-fill"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr *ngFor="let unit of units | slice:0:selectedUnit" class="dm-initiative-row" (click)="select(unit); scrollPane.scrollTop = 0">
+                    <td>{{unit.name}}</td>
+                    <td style="text-align: center;">{{unit.initiative}}</td>
+                    <td style="text-align: center;">
+                        <button class="btn btn-sm btn-success dm-initiative-btn" title="Toggle visible to players" (click)="toggleVisibility(unit);$event.stopPropagation()">
+                            <i class="bi" [class.bi-eye-fill]="unit.visible" [class.bi-eye-slash-fill]="!unit.visible"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger dm-initiative-btn" title="Remove" (click)="remove(unit);$event.stopPropagation()">
+                            <i class="bi bi-trash-fill"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr *ngIf="units.length == 0">
+                    <td colspan="4" class="dm-empty-table">No creatures</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="dm-initiative-controls">
+        <ng-template #addUnit>
+            <dmscreen-initiative-add (addUnit)="add($event)"></dmscreen-initiative-add>
+        </ng-template>
+        <button class="btn btn-sm btn-success" [ngbPopover]="addUnit" autoClose="outside" container="body" tabindex="5">
+            <i class="bi bi-plus"></i> Add
+        </button>
+        <button class="btn btn-sm btn-primary" (click)="sort()" [disabled]="units.length == 0" tabindex="5">
+            <i class="bi bi-sort-down"></i> Re-sort
+        </button>
+        <button class="btn btn-sm btn-primary" (click)="next()" [disabled]="units.length == 0" tabindex="5">
+            <i class="bi bi-play-fill"></i> Next
+        </button>
+        <button class="btn btn-sm btn-danger" (click)="clear()" [disabled]="units.length == 0" tabindex="5">
+            <i class="bi bi-trash-fill"></i> Clear
+        </button>
+        <button class="btn btn-sm btn-discord" (click)="discord()" [disabled]="disableDiscord$ | async" tabindex="5">
+            <i class="bi bi-discord"></i> {{tracker.isConnected() ? 'Request' : 'Connect'}}
+        </button>
+    </div>
+    <div class="dm-initiative-discord-status" [ngbCollapse]="!tracker.isConnected()" (click)="copyId()" ngbTooltip="Copied!" [closeDelay]="1000" triggers="click:mouseleave">
+        <i class="bi bi-discord"></i>
+        {{attachedChannels$ | async}} attached channel(s). 
+        Send <code title="Click to Copy">$attach {{tracker.getId()}}</code> to attach to a channel (click to copy)
+    </div>
+</div>

@@ -1,0 +1,89 @@
+.dm-data-tree-container {
+    overflow: hidden;
+    height: 100%;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.dm-data-tree-search {
+    flex-shrink: 0;
+    margin: 0.5rem;
+    width: calc(100% - 1rem);
+}
+
+.dm-data-tree-scroll {
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+div.dm-data-tree-list {
+    list-style: none;
+
+    &.dm-data-tree-expand > div {
+        > .dm-tree-row > *:first-child {
+            position: relative;
+        }
+
+        > .dm-tree-row > *:first-child::before {
+            content: '';
+            background-image: url('~bootstrap-icons/icons/chevron-down.svg');
+            background-size: contain;
+            position: absolute;
+            width: 0.6rem;
+            height: 0.6rem;
+            top: calc(0.75em - 0.3rem);
+            left: -1rem;
+
+            transition: transform 0.25s;
+        }
+
+        &.dm-tree-collapsed > .dm-tree-row > *:first-child::before {
+            transform: rotate(-90deg);
+        }
+    }
+}
+
+div.dm-data-tree-list {
+    > div > .dm-tree-row {
+        --dm-row-pad-left: 2rem;
+    }
+
+    div.dm-data-tree-list {
+        > div > .dm-tree-row {
+            --dm-row-pad-left: 2.66rem;
+        }
+
+        div.dm-data-tree-list {
+            > div > .dm-tree-row {
+                --dm-row-pad-left: 3.33rem;
+            }
+        }
+    }
+}
+
+.dm-tree-row {
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: var(--dm-row-pad-left);
+    cursor: pointer;
+    position: relative;
+    margin-bottom: 1px;
+
+    &:hover {
+        background-color: #0001;
+    }
+
+    &::after {
+        content: '';
+        position: absolute;
+        left: calc(4px + var(--dm-row-pad-left) - 1rem);
+        right: 4px;
+        bottom: -1px;
+        height: 1px;
+        background-color: #0001;
+    }
+}

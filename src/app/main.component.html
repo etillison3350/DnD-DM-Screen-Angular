@@ -1,1 +1,42 @@
-<p>main works!</p>
+<div class="dm-main-container">
+    <div class="dm-sidebar dm-data-tree">
+        <dmscreen-data-tree (selectUnit)="selectObject($event)"></dmscreen-data-tree>
+    </div>
+    <div class="dm-column dm-stat-block-container">
+        <dmscreen-stat-block [data]="selectedObject"></dmscreen-stat-block>
+    </div>
+    <!-- <div class="dm-column dm-stat-blocks">
+        <div class="card dm-card">
+            <div class="card-body dm-card-body">
+                <h5 class=card-title>Stat Blocks</h5>
+                <div class="dm-stat-block-container">
+                    <div class="dm-data-tree mr-3">
+                        <dmscreen-data-tree (selectUnit)="selectObject($event)"></dmscreen-data-tree>
+                    </div>
+                    <div class="dm-stat-block-scroll">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+    <div class="dm-column dm-initiative">
+        <div class="card dm-card">
+            <div class="card-body dm-card-body">
+                <h5 class="card-title">Initiative</h5>
+                <div class="dm-card-content">
+                    <dmscreen-initiative></dmscreen-initiative>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="dm-column dm-encounter">
+        <div class="card dm-card">
+            <div class="card-body dm-card-body">
+                <h5 class="card-title">Encounter</h5>
+                <div class="dm-card-content">
+                    <dmscreen-encounter></dmscreen-encounter>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

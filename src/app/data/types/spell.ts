@@ -1,8 +1,10 @@
+import { Feature } from "./feature";
+import { SpellType } from "./properties";
 
 export class Spell {
     name: string;
     level: number;
-	type: SpellType;
+    spellType: SpellType;
 	ritual: boolean;
 	castingTime: string;
 	range: string;
@@ -12,17 +14,5 @@ export class Spell {
 	duration: string;
 	concentration: boolean;
     classes: string[];
-    // TODO
-	description: string[];
-}
-
-export enum SpellType {
-    ABJURATION,
-	CONJURATION,
-	DIVINATION,
-	ENCHANTMENT,
-	EVOCATION,
-	ILLUSION,
-	NECROMANCY,
-	TRANSMUTATION
+	description: Feature[];
 }

@@ -1,15 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-encounter',
-  templateUrl: './encounter.component.html',
-  styleUrls: ['./encounter.component.css']
+    selector: 'dmscreen-encounter',
+    templateUrl: './encounter.component.html',
+    styleUrls: ['./encounter.component.scss']
 })
 export class EncounterComponent implements OnInit {
 
-  constructor() { }
+    constructor() { }
 
-  ngOnInit(): void {
-  }
+    ngOnInit(): void {}
 
 }

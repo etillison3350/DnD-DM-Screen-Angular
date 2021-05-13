@@ -1,1 +1,27 @@
-<p>data-tree works!</p>
+<div class="dm-data-tree-container">
+    <input #searchBar type="text" class="dm-data-tree-search form-control form-control-sm" placeholder="Search" (input)="search(searchBar.value)" />
+
+    <div class="dm-data-tree-scroll">
+        <div *ngIf="data" class="dm-data-tree-list dm-data-tree-expand">
+            <div *ngFor="let source of data" [class.dm-tree-collapsed]="source.collapsed">
+                <div class="dm-tree-row" (click)="toggle(source)">
+                    <span>{{source.name | replace:'-':' ' | engTitleCase}}</span>
+                </div>
+                <div class="dm-data-tree-list dm-data-tree-expand" [(ngbCollapse)]="source.collapsed">
+                    <div *ngFor="let type of source.values" [class.dm-tree-collapsed]="type.collapsed">
+                        <div class="dm-tree-row" (click)="toggle(type)">
+                            <span>{{type.type | titlecase}}</span>
+                        </div>
+                        <div class="dm-data-tree-list" [(ngbCollapse)]="type.collapsed">
+                            <div *ngFor="let obj of type.values$ | async">
+                                <div class="dm-tree-row" (click)="select(source.name, type.type, obj.id)" draggable="true" (dragstart)="startDrag(obj, type.type, $event)">
+                                    <span>{{obj.name}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

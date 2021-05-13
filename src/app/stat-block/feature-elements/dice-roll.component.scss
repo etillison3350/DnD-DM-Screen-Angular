@@ -1,0 +1,14 @@
+.dm-dice-roll {
+    cursor: pointer;
+
+    transition: color 0.2s;
+
+    &:hover {
+        color: var(--primary);
+    }
+}
+
+.dm-roll-crit {
+    font-weight: bold;
+    color: palegoldenrod;
+}

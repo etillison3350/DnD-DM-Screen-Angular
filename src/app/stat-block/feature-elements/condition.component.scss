@@ -1,0 +1,25 @@
+* {
+    --dm-accent-color: #700;
+}
+
+// .dm-statblock-condition {
+//     transition: color 0.2s;
+
+//     &:hover {
+//         color: var(--primary);
+//     }
+// }
+
+.dm-statblock-name {
+    font-family: 'Cormorant SC', sans-serif;
+    font-size: 20pt;
+    color: var(--dm-accent-color);
+    margin: 0;
+}
+
+ul.dm-statblock-condition-description {
+    padding-left: 1.5rem;
+    margin: 0;
+    font-size: 10.5pt;
+    font-family: 'Source Sans Pro', sans-serif;
+}

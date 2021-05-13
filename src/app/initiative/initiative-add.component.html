@@ -1,0 +1,20 @@
+<form #form="ngForm" class="dm-initiative-add-form" (ngSubmit)="acceptUnit(form)" autocomplete="off">
+    <div class="input-group input-group-sm mb-2">
+        <div class="input-group-prepend">
+            <span class="input-group-text">Name</span>
+        </div>
+        <input type="text" class="form-control" required name="unitName" [(ngModel)]="newUnitName" tabindex="2" placeholder="Creature name">
+    </div>
+    <div class="input-group input-group-sm mb-2">
+        <select class="form-control dm-initiative-select" name="addRoll" [(ngModel)]="newUnitAddRoll" tabindex="1">
+            <option [ngValue]="true" selected>1d20 + </option>
+            <option [ngValue]="false">=</option>
+        </select>
+        <input type="number" class="form-control" required name="initiative" [(ngModel)]="newUnitInitiative" tabindex="3" [placeholder]="newUnitAddRoll ? 'Modifier' : 'Initiative'">
+        <div class="input-group-append">
+            <button class="btn btn-outline-success btn-sm dm-initiative-add-btn" type="submit" [disabled]="!form.valid" tabindex="4">
+                <i class="bi bi-check"></i> Add
+            </button> 
+        </div>
+    </div>   
+</form>

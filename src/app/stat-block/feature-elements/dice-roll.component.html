@@ -1,0 +1,9 @@
+<ng-template #rollResult>
+    <span>{{result.diceRoll | diceRoll:true}}: </span>
+    <span *ngIf="detailedResult" [class.dm-roll-crit]="isCrit">{{result.values | join:' + '}} = </span>
+    <span [class.dm-roll-crit]="isCrit">{{result.sum}}</span>
+</ng-template>
+<span class="dm-dice-roll" (click)="roll($event)" [ngbTooltip]="rollResult" #tooltip="ngbTooltip" triggers="click:mouseleave" closeDelay="500" container="body">
+    <ng-container *ngIf="!text">{{diceRoll | diceRoll}}</ng-container>
+    <ng-container *ngIf="text">{{text | replace:' ':'\u00A0'}}</ng-container>
+</span>

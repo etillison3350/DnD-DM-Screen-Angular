@@ -1,0 +1,36 @@
+<div *ngIf="feature" class="dm-feature" [class.dm-legendary-action]="feature.legendary">
+    <span *ngIf="feature.name" class="dm-feature-name">
+        <span>{{feature.name}}</span>
+        <span *ngIf="feature.note" class="dm-feature-note"> ({{feature.note}})</span>
+        <span>. </span>
+    </span>
+    <span *ngIf="feature.attack; let attack" class="dm-attack">
+        <dmscreen-attack [attack]="attack"></dmscreen-attack>
+        <dmscreen-dice-roll class="dm-attack-modifier" [diceRoll]="{dice: 1, sides: 20, modifier: attack.modifier}"
+                [text]="(attack.modifier | modifier) + ' to hit'"></dmscreen-dice-roll>
+        <span>, </span>
+        <span class="dm-attack-params">{{attack.attackParameters}}. </span>
+        <span class="dm-attack-hit">Hit: </span>
+        <span *ngFor="let dtype of attack.damage; let i = index" class="dm-attack-damage">
+            <ng-container *ngIf="i > 0"> plus </ng-container>
+            <dmscreen-dice-roll [diceRoll]="dtype.amount"></dmscreen-dice-roll>
+            <ng-container> {{dtype.type}} damage</ng-container>
+        </span>
+        <span *ngIf="!feature.description">.</span>
+    </span>
+    <span class="dm-feature-description" *ngFor="let part of feature.description | featureComponents" [ngSwitch]="part.type">
+        <ng-container *ngSwitchCase="'text'">{{part.content}}</ng-container>
+        <dmscreen-dice-roll *ngSwitchCase="'diceroll'" [diceRoll]="part.content | parseDiceRoll" [text]="part.content"></dmscreen-dice-roll>
+        <dmscreen-condition *ngSwitchCase="'condition'" [condition]="part.content"></dmscreen-condition>
+        <span *ngSwitchCase="'link'" style="text-decoration: underline;">{{part.content}}</span> <!-- TODO -->
+        <ng-container *ngSwitchCase="'bolditalic'">
+            <span *ngIf="part.content.charAt(2) == '*' || part.content.charAt(2) == '_'; else bold" class="dm-bolditalic">{{part.content | slice:3:-3}}</span>
+            <ng-template #bold>
+                <span *ngIf="part.content.charAt(1) == '*' || part.content.charAt(1) == '_'; else italic" class="dm-bold">{{part.content | slice:2:-2}}</span>
+            </ng-template>
+            <ng-template #italic>
+                <span class="dm-italic">{{part.content | slice:1:-1}}</span>
+            </ng-template>
+        </ng-container>
+    </span>
+</div>

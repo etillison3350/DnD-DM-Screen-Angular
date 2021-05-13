@@ -1,0 +1,67 @@
+* {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.5pt;
+}
+
+.dm-attack-roll {
+    $dm-sidebar-width: 1.5rem;
+
+    .dm-attack-icon {
+        @import '~bootstrap/scss/bootstrap';
+
+        background-color: $input-group-addon-bg;
+        position: absolute;
+        top: -$popover-border-width;
+        left: -$popover-border-width;
+        bottom: -$popover-border-width;
+        width: $dm-sidebar-width;
+
+        padding: 8px 4px;
+
+        box-sizing: content-box;
+        border: $popover-border-width solid $input-group-addon-border-color;
+        border-radius: $popover-border-radius 0 0 $popover-border-radius;
+
+        * {
+            opacity: 0.4;
+            width: 100%;
+        }
+    }
+
+    .dm-attack-result {
+        margin-left: $dm-sidebar-width + 0.25rem;
+
+        text-align: left;
+    }
+}
+
+.dm-attack-type {
+    cursor: pointer;
+    font-style: italic;
+
+    transition: color 0.2s;
+
+    &:hover {
+        color: var(--primary);
+    }
+}
+
+.dm-attack-damage {
+    margin-left: 4px;
+}
+
+.dm-roll-crit, .dm-roll-crit-fail {
+    font-weight: bold;
+}
+
+.dm-roll-crit {
+    color: #280;
+}
+
+.dm-roll-crit-fail {
+    color: #c22;
+}
+
+.dm-bold {
+    font-weight: bold;
+}

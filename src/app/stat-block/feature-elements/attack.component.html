@@ -1,0 +1,27 @@
+<ng-template #rollResult>
+    <div class="dm-attack-roll">
+        <div class="dm-attack-icon">
+            <img src="/assets/sword.svg" />
+        </div>
+        <div class="dm-attack-result">
+            <div class="dm-attack-hit" [class.dm-roll-crit]="isCrit" [class.dm-roll-crit-fail]="isCritFail">
+                <span *ngIf="isCritFail">Critical Miss! </span>
+                <span *ngIf="isCrit">Critical Hit! </span>
+                <span *ngIf="detailedResult" >{{result.attack.values | join:' + '}} = </span>
+                <span class="dm-bold">{{result.attack.sum}} to hit</span>
+            </div>
+            <div *ngFor="let dmg of result.damage" class="dm-attack-damage">
+                <span>{{dmg.amount.diceRoll | diceRoll:true}} = </span>
+                <span class="dm-bold" [class.dm-roll-crit]="isCrit">{{dmg.amount.sum}}</span>
+                <span *ngIf="detailedResult" [class.dm-roll-crit]="isCrit"> ({{dmg.amount.values | join:' + '}})</span>
+                <span> {{dmg.type}}</span>
+            </div>
+            <div class="dm-attack-total">
+                <span class="dm-bold" [class.dm-roll-crit]="isCrit">{{result.total}}</span>
+                <span> total damage</span>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<span class="dm-attack-type" (click)="roll($event)" [ngbPopover]="rollResult" #popover="ngbPopover"
+        triggers="click:mouseleave" closeDelay="500" container="body">{{attack.melee ? (attack.ranged ? 'Melee or Ranged' : 'Melee') : 'Ranged'}} {{attack.type | titlecase}} Attack: </span>

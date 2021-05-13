@@ -1,0 +1,33 @@
+* {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10.5pt;
+}
+
+.dm-feature {
+    padding: 4px 0px;
+}
+
+.dm-feature-name {
+    font-weight: bold;
+}
+
+.dm-feature-name, .dm-attack-type, .dm-attack-hit {
+    font-style: italic;
+}
+
+.dm-legendary-action {
+    padding: 0px 0px 0px 1rem;
+    text-indent: -1rem;
+    
+    .dm-feature-name {
+        font-style: normal;
+    }
+}
+
+.dm-bolditalic, .dm-bold {
+    font-weight: bold;
+}
+
+.dm-bolditalic, .dm-italic {
+    font-style: italic;
+}
